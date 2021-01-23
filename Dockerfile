@@ -7,15 +7,12 @@ RUN yum -y update; \
     yum -y install git; \
     yum-config-manager --disable 'remi-php*'; \
     yum-config-manager --enable remi-php80; \
-    yum -y install php php-mbstring php-xml php-fpm;
-
-RUN yum install nano -y
-RUN yum install procps -y
-
-RUN yum -y install nginx
-RUN touch /var/log/nginx/error.log
+    yum -y install php php-mbstring php-xml php-fpm \
+    yum -y install nginx \
+    yum -y autoremove;
 
 COPY conf/nginx.conf /etc/nginx/
+RUN mkdir /tmp/nginx
 COPY conf/php-fpm.conf /etc/
 
 WORKDIR /var/runtime/
