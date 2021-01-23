@@ -1,0 +1,5 @@
+#!/usr/bin/bash
+
+/sbin/php-fpm -D
+/sbin/nginx
+/usr/bin/php /var/runtime/run.php
