@@ -16,7 +16,6 @@
 $router->get('/get', function (Illuminate\Http\Request $request) use ($router) {
     return response([
         "version" => $router->app->version(),
-        "SERVER" => $_SERVER,
         'POST' => $_POST,
         'GET' => $_GET
     ], 200, [
@@ -27,7 +26,6 @@ $router->get('/get', function (Illuminate\Http\Request $request) use ($router) {
 $router->post('/post', function (Illuminate\Http\Request $request) use ($router) {
     return response([
         "version" => $router->app->version(),
-        "SERVER" => $_SERVER,
         'POST' => $_POST,
         'GET' => $_GET
     ], 200, [
