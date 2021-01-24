@@ -31,9 +31,9 @@ class Runtime
 
     public function run()
     {
-        while (true) {
-            $client = new \GuzzleHttp\Client();
+        $client = new \GuzzleHttp\Client();
 
+        while (true) {
             $event = $this->getNextRequest();
             $request = new APIRequest($event['payload']);
 
@@ -59,7 +59,6 @@ class Runtime
                 );
             }
 
-            // Submit the response back to the runtime API.
             $this->sendResponse($event['invocationId'], $response);
         }
     }

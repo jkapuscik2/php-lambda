@@ -19,6 +19,8 @@ $router->get('/get', function (Illuminate\Http\Request $request) use ($router) {
         "SERVER" => $_SERVER,
         'POST' => $_POST,
         'GET' => $_GET
+    ], 200, [
+        "Content-Type" => "application/json"
     ]);
 });
 
@@ -28,5 +30,7 @@ $router->post('/post', function (Illuminate\Http\Request $request) use ($router)
         "SERVER" => $_SERVER,
         'POST' => $_POST,
         'GET' => $_GET
+    ], 200, [
+        "Content-Type" => "application/json"
     ]);
 });

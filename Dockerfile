@@ -16,14 +16,18 @@ RUN mkdir /tmp/nginx
 COPY conf/php-fpm.conf /etc/
 
 WORKDIR /var/runtime/
-COPY bootstrap/ .
+COPY runtime/ .
 RUN chmod -R 755 bootstrap
 RUN curl -sS https://getcomposer.org/installer | php
 RUN php composer.phar install
+
+COPY bootstrap/ .
+RUN chmod -R 755 start.sh
 
 WORKDIR /var/task
 COPY app/ .
 RUN curl -sS https://getcomposer.org/installer | php
 RUN php composer.phar install
 
+ENTRYPOINT ["/var/runtime/start.sh"]
 CMD [ "index.php"]

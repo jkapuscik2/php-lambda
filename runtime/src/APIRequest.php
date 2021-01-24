@@ -4,7 +4,7 @@ namespace App;
 
 class APIRequest
 {
-    const LOCAL_SERVER = "127.0.0.1:8080";
+    const LOCAL_SERVER = "127.0.0.1:8090";
 
     private string $httpMethod;
     private string $url;
