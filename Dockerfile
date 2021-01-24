@@ -25,7 +25,7 @@ COPY bootstrap/ .
 RUN chmod -R 755 start.sh
 
 WORKDIR /var/task
-COPY app/ .
+COPY api/ .
 RUN curl -sS https://getcomposer.org/installer | php
 RUN php composer.phar install
 
