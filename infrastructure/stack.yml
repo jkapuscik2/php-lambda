@@ -14,7 +14,7 @@ Parameters:
     Default: php-lambda
 
 Resources:
-  apiGateway:
+  ApiGateway:
     Type: AWS::ApiGateway::RestApi
     Properties:
       EndpointConfiguration:
@@ -22,14 +22,14 @@ Resources:
           - REGIONAL
       Name: !Ref apiGatewayName
 
-  proxyResource:
+  ProxyResource:
     Type: AWS::ApiGateway::Resource
     Properties:
-      RestApiId: !Ref apiGateway
-      ParentId: !GetAtt apiGateway.RootResourceId
+      RestApiId: !Ref ApiGateway
+      ParentId: !GetAtt ApiGateway.RootResourceId
       PathPart: '{proxy+}'
 
-  apiGatewayRootMethod:
+  ApiGatewayRootMethod:
     Type: AWS::ApiGateway::Method
     Properties:
       AuthorizationType: NONE
@@ -39,19 +39,19 @@ Resources:
         Type: AWS_PROXY
         Uri: !Sub
           - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
-          - lambdaArn: !GetAtt lambdaFunction.Arn
-      ResourceId: !Ref proxyResource
-      RestApiId: !Ref apiGateway
+          - lambdaArn: !GetAtt LambdaFunction.Arn
+      ResourceId: !Ref ProxyResource
+      RestApiId: !Ref ApiGateway
 
-  apiGatewayDeployment:
+  ApiGatewayDeployment:
     Type: AWS::ApiGateway::Deployment
     DependsOn:
-      - apiGatewayRootMethod
+      - ApiGatewayRootMethod
     Properties:
-      RestApiId: !Ref apiGateway
+      RestApiId: !Ref ApiGateway
       StageName: !Ref apiGatewayStageName
 
-  lambdaFunction:
+  LambdaFunction:
     Type: AWS::Lambda::Function
     Properties:
       PackageType: Image
@@ -59,17 +59,17 @@ Resources:
         ImageUri: !Ref lambdaImageUrl
       FunctionName: !Ref lambdaFunctionName
       MemorySize: 256
-      Role: !GetAtt lambdaIAMRole.Arn
+      Role: !GetAtt LambdaIAMRole.Arn
 
-  lambdaApiGatewayInvoke:
+  LambdaApiGatewayInvoke:
     Type: AWS::Lambda::Permission
     Properties:
       Action: lambda:InvokeFunction
-      FunctionName: !GetAtt lambdaFunction.Arn
+      FunctionName: !GetAtt LambdaFunction.Arn
       Principal: apigateway.amazonaws.com
-      SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${apiGateway}/*/*/*
+      SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ApiGateway}/*/*/*
 
-  lambdaIAMRole:
+  LambdaIAMRole:
     Type: AWS::IAM::Role
     Properties:
       AssumeRolePolicyDocument:
@@ -94,15 +94,9 @@ Resources:
                   - !Sub arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/${lambdaFunctionName}:*
           PolicyName: lambda
 
-  lambdaLogGroup:
-    Type: AWS::Logs::LogGroup
-    Properties:
-      LogGroupName: !Sub /aws/lambda/${lambdaFunctionName}
-      RetentionInDays: 90
-
 Outputs:
-  apiGatewayInvokeURL:
-    Value: !Sub https://${apiGateway}.execute-api.${AWS::Region}.amazonaws.com/${apiGatewayStageName}
+  ApiGatewayInvokeURL:
+    Value: !Sub https://${ApiGateway}.execute-api.${AWS::Region}.amazonaws.com/${apiGatewayStageName}
 
-  lambdaArn:
-    Value: !GetAtt lambdaFunction.Arn
+  LambdaArn:
+    Value: !GetAtt LambdaFunction.Arn
